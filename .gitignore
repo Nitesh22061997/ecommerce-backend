@@ -1,10 +1,13 @@
-# Node.js dependencies
+# Ignore node_modules in the root and frontend directories
 node_modules/
+/client/node_modules/
 
-# Logs
-logs
-*.log
-npm-debug.log*
+# Ignore .env files in the root and frontend directories
+/client/.env
+
+# Ignore dist directories in the root and frontend directories
+dist/
+/client/dist/
 
 # Optional npm cache directory
 .npm

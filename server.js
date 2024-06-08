@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import colors from "colors";
 import dotenv from "dotenv";
@@ -7,10 +8,13 @@ import authRoutes from "./routes/authRoute.js"
 import cors from "cors"
 import categoryRoutes from "./routes/categoryRoutes.js"
 import productRoutes from "./routes/productRoutes.js"
-import path from "path";
 
 // config env
 dotenv.config()
+
+const PORT = process.env.PORT || 5000
+
+const __dirname = path.resolve()
 
 // database config
 connectDB();
@@ -29,13 +33,13 @@ app.use("/api/v1/category", categoryRoutes)
 app.use("/api/v1/product", productRoutes)
 
 
-//rest api
-app.get("/", (req, res) => {
-    res.send("<h1>Welcome to ecommerce app</h1>");
-});
+app.use(express.static(path.join(__dirname, "/client/dist")))
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "dist", "index.html"))
+})
 
 //PORT
-const PORT = process.env.PORT || 5000
 
 //run or listen
 

@@ -5,10 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix ./client",
-    "dev": "concurrently \"npm run start\" \"npm run client\""
+    "start": "node backend/server.js",
+    "build": "npm install && npm install --client && npm run build --prefix client"
   },
   "keywords": [],
   "author": "AnnexxTech",

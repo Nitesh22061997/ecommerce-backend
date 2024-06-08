@@ -8,12 +8,15 @@ import authRoutes from "./routes/authRoute.js"
 import cors from "cors"
 import categoryRoutes from "./routes/categoryRoutes.js"
 import productRoutes from "./routes/productRoutes.js"
+import { fileURLToPath } from "url";
 
 // config env
 dotenv.config()
 
 const PORT = process.env.PORT || 5000
 
+// ES module fix
+const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.resolve()
 
 // database config
@@ -36,7 +39,7 @@ app.use("/api/v1/product", productRoutes)
 app.use(express.static(path.join(__dirname, "/client/dist")))
 
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "dist", "index.html"))
+    res.sendFile(path.join(__dirname, "./client/dist/index.html"))
 })
 
 //PORT

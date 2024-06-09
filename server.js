@@ -4,48 +4,52 @@ import colors from "colors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
-import authRoutes from "./routes/authRoute.js"
-import cors from "cors"
-import categoryRoutes from "./routes/categoryRoutes.js"
-import productRoutes from "./routes/productRoutes.js"
+import authRoutes from "./routes/authRoute.js";
+import cors from "cors";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 import { fileURLToPath } from "url";
 
-// config env
-dotenv.config()
+// Config environment variables
+dotenv.config();
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 5000;
 
 // ES module fix
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.resolve()
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.resolve();
 
-// database config
+// Database config
 connectDB();
 
-//rest object
-const app = express()
+// Initialize Express app
+const app = express();
 
-// middldeware config
-app.use(cors())
-app.use(express.json())
-app.use(morgan("dev"))
+// Middleware config
+app.use(cors());
+app.use(express.json());
+app.use(morgan("dev"));
 
-// routes
-app.use("/api/v1/auth", authRoutes)
-app.use("/api/v1/category", categoryRoutes)
-app.use("/api/v1/product", productRoutes)
+// API routes
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/category", categoryRoutes);
+app.use("/api/v1/product", productRoutes);
 
+// Serve static files only in development mode
+if (process.env.NODE_ENV === 'development') {
+    app.use(express.static(path.join(__dirname, "/client/dist")));
 
-app.use(express.static(path.join(__dirname, "/client/dist")))
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "./client/dist/index.html"));
+    });
+} else {
+    // Handle non-API routes in production
+    app.get("/", (req, res) => {
+        res.status(404).send('API is running, but static files are not available.');
+    });
+}
 
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "./client/dist/index.html"))
-})
-
-//PORT
-
-//run or listen
-
+// Start server
 app.listen(PORT, () => {
-    console.log(`Server is running ${process.env.DEV_MODE} on port ${PORT}`.blue.bold);
-})
+    console.log(`Server is running in ${process.env.NODE_ENV} mode on port ${PORT}`.blue.bold);
+});
